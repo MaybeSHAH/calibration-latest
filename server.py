@@ -2,8 +2,13 @@
 
 import numpy as np
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
+
+
 app = Flask(__name__)
+CORS(app)
+
 # Load the model
 model = joblib.load('./models/LCS_Calibration_Model_Mumbai.pkl')
 apportion_model = joblib.load('./models/regressor.pkl')
