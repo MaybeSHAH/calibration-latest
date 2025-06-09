@@ -1,0 +1,31 @@
+name: Build and Push to Azure Container Registry
+
+on:
+  push:
+    branches:
+      - main  # or your deploy branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: calibration.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t calibration.azurecr.io/mlimage:latest .
+          docker push calibration.azurecr.io/mlimage:latest
